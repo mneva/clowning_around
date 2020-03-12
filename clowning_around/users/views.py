@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, RedirectView, UpdateView
 from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
+from clowning_around.users.models import Appointment
 
 User = get_user_model()
 
@@ -48,3 +49,34 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+
+class UserAppointmentsView(LoginRequiredMixin, View):
+
+    model = Appointment
+    fields = ["title", "status", "appointment_date", "rating", "user"]
+
+    def get_appoints_list(self):
+        return reverse("appointments:list", kwargs={"username": self.request.user.username})
+
+appointments_view = UserAppointmentsView.as_view()
+
+
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+
+    model = Appointment
+    fields = ["title", "status", "appointment_date", "rating", "user"]
+
+    def get_success_url(self):
+        return reverse("appointments:detail", kwargs={"username": self.request.user.username})
+
+    def get_object(self):
+        return Appointment.objects.get(username=self.request.user.username)
+
+    def form_valid(self, form):
+        messages.add_message(
+            self.request, messages.INFO, _("Infos successfully updated")
+        )
+        return super().form_valid(form)
+
+appointment_update_view = AppointmentUpdateView.as_view()

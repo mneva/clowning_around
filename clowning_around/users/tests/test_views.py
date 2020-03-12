@@ -2,7 +2,12 @@ import pytest
 from django.conf import settings
 from django.test import RequestFactory
 
-from clowning_around.users.views import UserRedirectView, UserUpdateView
+from clowning_around.users.views import (
+    UserRedirectView,
+    UserUpdateView,
+    ClientAppointmentListView,
+    AppointmentUpdateView
+)
 
 pytestmark = pytest.mark.django_db
 
@@ -50,3 +55,49 @@ class TestUserRedirectView:
         view.request = request
 
         assert view.get_redirect_url() == f"/users/{user.username}/"
+
+
+class TestClientAppointmentListView:
+    def test_view_appointments(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass
+
+    def test_rate_appointment(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass
+
+
+class TestTroupeLeaderView:
+    def test_view_create_appointment(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass
+
+    def test_view_assign_to_troupe(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass
+    
+
+class TestClownsView:
+    def test_view_appointments(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass
+
+    def test_view_update_appointment_status(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass
+
+    def test_view_report_appointment_incident(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass
+
+    def test_view_request_client_contact(
+        self, user: settings.AUTH_USER_MODEL, request_factory: RequestFactory
+    ):
+        pass

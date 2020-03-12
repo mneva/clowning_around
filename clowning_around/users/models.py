@@ -56,3 +56,37 @@ class Client(models.Model):
     def __str__(self):
         return self.user.name
 
+
+class Appointment(models.Model):
+    STATUSES = (
+        ("UPCOMING", "upcoming"),
+        ("INCIPIENT", "incipient"),
+        ("COMPLETED", "completed"),
+        ("CANCELLED", "cancelled")
+    )
+
+    RATINGS = (
+        (1, "disappointed"),
+        (2, "slightly disappointed"),
+        (3, "neither happy nor disappointed"),
+        (4, "slightly happy"),
+        (5, "happy"),
+    )
+
+    title = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, choices=STATUSES, default="UPCOMING")
+    appointment_date = models.DateTimeField()
+    rating = models.IntegerField(null=True, blank=True, choices=RATINGS)
+    user = models.OneToOneField(User, on_delete=models.PROTECT, primary_key=True)
+
+
+class Incident(models.Model):
+    appointment = models.ForeignKey(Appointment, on_delete=models.PROTECT)
+    incident_type = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)
+
+
+class RequestContact(models.Model):
+    appointment = models.OneToOneField(Appointment, on_delete=models.PROTECT)
+    client = models.OneToOneField(Client, on_delete=models.PROTECT)
+    reason = models.CharField(max_length=255)
